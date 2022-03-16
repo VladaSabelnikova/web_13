@@ -31,6 +31,11 @@ logging.basicConfig(level=logging.INFO)
 sessionStorage = {}
 
 
+@app.route('/')
+def root():
+    return 'привет'
+
+
 @app.route('/post', methods=['POST'])
 # Функция получает тело запроса и возвращает ответ.
 # Внутри функции доступен request.json - это JSON,
