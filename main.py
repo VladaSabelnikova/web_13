@@ -62,7 +62,7 @@ def main():
 
 @app.route('/')
 def root():
-    return 'привет'
+    return 'привет привет'
 
 
 def handle_dialog(req, res):
