@@ -29,6 +29,8 @@ logging.basicConfig(level=logging.INFO)
 # Когда он откажется купить слона,
 # то мы уберем одну подсказку. Как будто что-то меняется :)
 sessionStorage = {}
+product = 'слона'
+marker = False
 
 
 @app.route('/post', methods=['POST'])
@@ -66,9 +68,14 @@ def root():
 
 
 def handle_dialog(req, res):
+    global marker, product
     user_id = req['session']['user_id']
 
     if req['session']['new']:
+
+        if marker:
+            product = 'кролика'
+
         # Это новый пользователь.
         # Инициализируем сессию и поприветствуем его.
         # Запишем подсказки, которые мы ему покажем в первый раз
@@ -81,7 +88,7 @@ def handle_dialog(req, res):
             ]
         }
         # Заполняем текст ответа
-        res['response']['text'] = 'Привет! Купи слона!'
+        res['response']['text'] = f'Привет! Купи {product}!'
         # Получим подсказки
         res['response']['buttons'] = get_suggests(user_id)
         return
@@ -103,13 +110,16 @@ def handle_dialog(req, res):
         'я куплю'
     ]:
         # Пользователь согласился, прощаемся.
-        res['response']['text'] = 'Слона можно найти на Яндекс.Маркете!'
+        res['response']['text'] = f'{product.capitalize()}' \
+                                  f' можно найти на Яндекс.Маркете!'
         res['response']['end_session'] = True
+
+        marker = True
         return
 
     # Если нет, то убеждаем его купить слона!
     res['response']['text'] = \
-        f"Все говорят '{req['request']['original_utterance']}', а ты купи слона!"
+        f"Все говорят '{req['request']['original_utterance']}', а ты купи {product}!"
     res['response']['buttons'] = get_suggests(user_id)
 
 
