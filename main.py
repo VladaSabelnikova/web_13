@@ -112,7 +112,7 @@ def handle_dialog(req, res):
         # Пользователь согласился, прощаемся.
         res['response']['text'] = f'{product.capitalize()}' \
                                   f' можно найти на Яндекс.Маркете!'
-        res['response']['end_session'] = True
+        res['response']['end_session'] = False
 
         marker = True
         return
