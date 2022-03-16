@@ -31,11 +31,6 @@ logging.basicConfig(level=logging.INFO)
 sessionStorage = {}
 
 
-@app.route('/')
-def root():
-    return 'привет'
-
-
 @app.route('/post', methods=['POST'])
 # Функция получает тело запроса и возвращает ответ.
 # Внутри функции доступен request.json - это JSON,
@@ -63,6 +58,11 @@ def main():
 
     # Преобразовываем в JSON и возвращаем
     return json.dumps(response)
+
+
+@app.route('/')
+def root():
+    return 'привет'
 
 
 def handle_dialog(req, res):
