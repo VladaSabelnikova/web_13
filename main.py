@@ -4,12 +4,25 @@ import os
 
 from flask import Flask, request
 
-
 app = Flask(__name__)
 logging.basicConfig(level=logging.INFO)
 sessionStorage = {}
 product = 'слона'
 marker = False
+DECIDED = [
+    'ладно',
+    'куплю',
+    'покупаю',
+    'хорошо',
+    'я покупаю',
+    'я куплю'
+]
+
+UNSURE_DECISION = [
+    "Не хочу.",
+    "Не буду.",
+    "Отстань!",
+]
 
 
 @app.route('/post', methods=['POST'])
@@ -39,26 +52,14 @@ def handle_dialog(req, res):
     user_id = req['session']['user_id']
 
     if req['session']['new']:
-
         sessionStorage[user_id] = {
-            'suggests': [
-                "Не хочу.",
-                "Не буду.",
-                "Отстань!",
-            ]
+            'suggests': UNSURE_DECISION
         }
         res['response']['text'] = f'Привет! Купи {product}!'
         res['response']['buttons'] = get_suggests(user_id)
         return
 
-    if req['request']['original_utterance'].lower() in [
-        'ладно',
-        'куплю',
-        'покупаю',
-        'хорошо',
-        'я покупаю',
-        'я куплю'
-    ]:
+    if req['request']['original_utterance'].lower() in DECIDED:
         res['response']['text'] = f'{product.capitalize()}' \
                                   f' можно найти на Яндекс.Маркете!'
         res['response']['end_session'] = False
